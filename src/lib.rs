@@ -241,3 +241,22 @@ impl Component for ShinyApp {
         }
     }
 }
+
+use wasm_bindgen::prelude::*;
+use serde::Serialize;
+use serde_wasm_bindgen::to_value;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = Shiny)]
+    fn setInputValue(id: &str, value: JsValue);
+}
+
+pub fn set_input_value<T>(id: &str, value: T) -> Result<(), JsValue>
+where
+    T: Serialize,
+{
+    let value = to_value(&value)?;
+    setInputValue(id, value);
+    Ok(())
+}
