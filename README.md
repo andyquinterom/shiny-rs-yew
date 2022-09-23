@@ -14,44 +14,27 @@ from RStudio.
 
 ### With shiny-rs-server
 
-To include the dependencies using the `shiny-rs-server` crate you will need to include
-the JavaScript and CSS dependencies. While we are working on setting up a CDN
-to make this easier, for now you will have to manually download the dependencies
-from the official Shiny repository.
+In order to run the app with the pre-built components you will need to include the
+following dependencies in the `static` directory at the root of your project:
 
-In the following example we will download the dependencies and include them in
-a `static` folder in the root of our project.
+- jquery.min.js
+- shiny.min.js
+- shiny.min.css
+- bootstrap.min.css
+- bootstrap.bundle.min.js
+
+To automatically download these dependencies run the following commands:
 
 ```bash
+wget https://code.jquery.com/jquery-3.6.1.min.js -O static/jquery.min.js
 wget https://raw.githubusercontent.com/rstudio/shiny/v1.7.2/inst/www/shared/shiny.min.js -O static/shiny.min.js
 wget https://raw.githubusercontent.com/rstudio/shiny/v1.7.2/inst/www/shared/shiny.min.js.map -O static/shiny.min.js.map
 wget https://raw.githubusercontent.com/rstudio/shiny/v1.7.2/inst/www/shared/shiny.min.css -O static/shiny.min.css
+wget https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css -O static/bootstrap.min.css
+wget https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js -O static/bootstrap.bundle.min.js
 ```
 
-Our `index.html` will something like this:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-        <link href="lib/shiny.min.css" rel="stylesheet" />
-        <script src="lib/shiny.min.js"></script>
-        <link href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" rel="stylesheet" />
-        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
-        <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-    </body>
-</html>
-```
-
-We will also need to expose the `static` folder we created in our server. We can easily
+We will also need to expose the `static` folder we created in our server to the `/lib` path. We can easily
 add a service that looks something like this:
 
 ```rust

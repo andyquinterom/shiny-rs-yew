@@ -1,4 +1,46 @@
 use yew::prelude::*;
+use yew_interop::{ ScriptEffect, declare_resources };
+
+declare_resources!(
+    ! jquery
+    "/lib/jquery.min.js"
+    ! shiny_js
+    "/lib/shiny.min.js"
+    ! bootstrap_js
+    "/lib/bootstrap.min.js"
+);
+
+#[function_component(LoadShiny)]
+pub fn load_shiny() -> Html {
+    let script = use_jquery();
+    html! {
+        if let Some(script) = script {
+            <ScriptEffect {script} />
+            <LoadShinyJS />
+            <link rel="stylesheet" href="/lib/shiny.min.css" />
+        } else {
+        }
+    }
+}
+
+#[function_component(LoadShinyJS)]
+pub fn load_shiny_js() -> Html {
+    let script = use_shiny_js();
+    html! {
+        if let Some(script) = script { <ScriptEffect {script} /> } else { <></> }
+    }
+}
+
+#[function_component(UseBootstrap)]
+pub fn load_bootstrap() -> Html {
+    let script = use_bootstrap_js();
+    html! {
+        <>
+        <link rel="stylesheet" href="/lib/bootstrap.min.css" />
+        if let Some(script) = script { <ScriptEffect {script} /> } else { }
+        </>
+    }
+}
 
 #[macro_export]
 macro_rules! NS {
@@ -150,6 +192,7 @@ impl Component for PageNavbar {
         }).collect::<Vec<Html>>();
         html! {
             <>
+            <UseBootstrap />
             <nav class="navbar navbar-expand-lg bg-light" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -169,6 +212,32 @@ impl Component for PageNavbar {
                 </div>
             </div>
             </>
+        }
+    }
+}
+
+#[derive(PartialEq, Properties)]
+pub struct ShinyAppProps {
+    pub title: String,
+    pub children: Children
+}
+
+pub struct ShinyApp;
+
+impl Component for ShinyApp {
+    type Message = ();
+    type Properties = ShinyAppProps;
+
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self
+    }
+
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        html! {
+            <ResourceProvider>
+                <LoadShiny />
+                { ctx.props().children.clone() }
+            </ResourceProvider>
         }
     }
 }
