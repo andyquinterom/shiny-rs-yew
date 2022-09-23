@@ -118,6 +118,8 @@ pub struct PageNavbarProps {
     #[prop_or_default]
     pub id: String,
     #[prop_or_default]
+    pub title: String,
+    #[prop_or_default]
     pub class: String,
     #[prop_or_default]
     pub style: String,
@@ -151,7 +153,7 @@ impl Component for PageNavbar {
             <nav class="navbar navbar-expand-lg bg-light" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <span class="navbar-brand">{"hola"}</span>
+                        <span class="navbar-brand">{ctx.props().title.clone()}</span>
                         <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
